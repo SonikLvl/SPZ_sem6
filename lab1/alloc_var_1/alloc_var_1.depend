@@ -1,0 +1,39 @@
+# depslib dependency file v1.0
+1772724051 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.c
+	"block.h"
+
+1772722450 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.h
+	<stdbool.h>
+	<stdint.h>
+	<stddef.h>
+	"allocator_impl.h"
+
+1772534983 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator_impl.h
+	<stddef.h>
+
+1772537973 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.c
+	"kernel.h"
+	<windows.h>
+
+1772535342 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.h
+	<stddef.h>
+
+1772725643 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdint.h>
+	"allocator.h"
+
+1772726983 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator.h
+	<stdint.h>
+
+1772726895 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator.c
+	"allocator.h"
+	"block.h"
+	"kernel.h"
+	"config.h"
+	<stdio.h>
+	<string.h>
+
+1772534940 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\config.h
+
