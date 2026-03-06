@@ -48,6 +48,11 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="rbtree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rbtree.h" />
+		<Unit filename="tree.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

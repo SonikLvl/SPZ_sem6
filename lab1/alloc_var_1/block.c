@@ -4,7 +4,7 @@
 void block_split(block_header_t* b, size_t new_size) {
     size_t current_size = block_size(b);
     // якщо залишок менший за розм≥р заголовка + м≥н≥мальне корисне навантаженн€, не д≥лимо
-    if (current_size - new_size < sizeof(block_header_t) + ALIGNMENT) {
+    if (current_size - new_size < sizeof(block_header_t) + MIN_PAYLOAD_SIZE) {
         return;
     }
 

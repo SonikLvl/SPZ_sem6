@@ -5,7 +5,9 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "allocator_impl.h"
+#include "tree.h"
 
+#define MIN_PAYLOAD_SIZE (sizeof(block_node))
 #define FLAG_BUSY  0x1 //0001
 #define FLAG_FIRST 0x2 //0010
 #define FLAG_LAST  0x4 //0100
@@ -50,6 +52,14 @@ static inline block_header_t* block_next(block_header_t* b) {
 static inline block_header_t* block_prev(block_header_t* b) {
     if (block_is_first(b)) return NULL;
     return (block_header_t*)((uint8_t*)b - b->prev_size);
+}
+
+static inline block_node* block_to_node(block_header_t* b) {
+    return (block_node*)block_to_payload(b);
+}
+
+static inline block_header_t* node_to_block(block_node* n) {
+    return payload_to_block((void*)n);
 }
 
 void block_split(block_header_t* b, size_t new_size);
