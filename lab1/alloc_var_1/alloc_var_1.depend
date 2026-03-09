@@ -1,36 +1,40 @@
 # depslib dependency file v1.0
-1772811177 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.c
+1773042809 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.c
 	"block.h"
 
-1772810850 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.h
+1773042772 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\block.h
 	<stdbool.h>
 	<stdint.h>
 	<stddef.h>
 	"allocator_impl.h"
 	"tree.h"
+	"config.h"
 
 1772806425 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator_impl.h
 	<stddef.h>
 
-1772806425 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.c
+1773041935 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.c
 	"kernel.h"
 	<windows.h>
+	<stdint.h>
+	"config.h"
 
-1772806425 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.h
+1773039653 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\kernel.h
 	<stddef.h>
 
-1772823390 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\main.c
+1773040428 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdint.h>
 	<stdbool.h>
 	<time.h>
 	"allocator.h"
+	"config.h"
 
 1772806425 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator.h
 	<stdint.h>
 
-1772826158 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator.c
+1773042971 source:d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\allocator.c
 	"allocator.h"
 	"block.h"
 	"kernel.h"
@@ -38,7 +42,7 @@
 	<stdio.h>
 	<string.h>
 
-1772806425 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\config.h
+1773043012 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\config.h
 
 1772809432 d:\1kpi_works\c_sem6_spz\lab1\alloc_var_1\tree.h
 	"rbtree.h"

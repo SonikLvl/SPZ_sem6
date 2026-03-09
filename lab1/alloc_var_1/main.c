@@ -4,10 +4,11 @@
 #include <stdbool.h>
 #include <time.h>
 #include "allocator.h"
+#include "config.h"
 
 #define MAX_RECORDS 100         // Кількість блоків, які ми одночасно запам'ятовуємо
 #define NUM_OPERATIONS 10000    // Загальна кількість операцій
-#define MAX_ALLOC_SIZE 4096     // Максимальний розмір одного блоку для виділення
+#define MAX_ALLOC_SIZE (PAGE_SIZE * 2000)     // Максимальний розмір одного блоку для виділення
 
 // Структура для відстеження виділеної пам'яті
 typedef struct {

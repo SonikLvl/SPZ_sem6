@@ -5,5 +5,6 @@
 
 void* os_alloc(size_t size);
 void os_free(void* ptr, size_t size);
+void os_discard_pages(void* payload_ptr, size_t payload_size, size_t offset);
 
 #endif

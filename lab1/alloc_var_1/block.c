@@ -23,6 +23,10 @@ void block_split(block_header_t* b, size_t new_size) {
     block_set_busy(next, false);
     block_set_first(next, false);
     block_set_last(next, was_last);
+#if USE_PAGED_MEMORY
+    // Обчислюємо зміщення для нового утвореного блоку
+    next->offset = b->offset + new_size;
+#endif
 
     // Оновлюємо prev_size для наступного за новим блоком (якщо він є)
     block_header_t* next_next = block_next(next);

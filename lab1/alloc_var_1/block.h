@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include "allocator_impl.h"
 #include "tree.h"
+#include "config.h"
 
 #define MIN_PAYLOAD_SIZE (sizeof(block_node))
 #define FLAG_BUSY  0x1 //0001
@@ -16,6 +17,9 @@
 typedef struct block_header {
     size_t size;      // Включає розмір блоку (з заголовком) + прапорці
     size_t prev_size; // Розмір попереднього лівого сусіда (для O(1) merge)
+#if USE_PAGED_MEMORY
+    size_t offset; // Зміщення payload'а блоку від початку його арени
+#endif
 } block_header_t;
 
 // --- Getters ---

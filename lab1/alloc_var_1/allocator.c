@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define SHRINK_THRESHOLD 0.5
+
 static block_tree free_tree;
 static block_node tree_null_node;
 static block_header_t* arena_start = NULL;
@@ -41,7 +43,33 @@ void* mem_alloc(size_t size) {
 
     // BEST FIT: Шукаємо найменший блок, який підходить
     block_node* best = block_tree_find_best(&free_tree, total_required);
-    if (!best) return NULL;
+    if (!best) {
+        size_t arena_size = DEFAULT_ARENA_SIZE;
+
+        if (total_required > DEFAULT_ARENA_SIZE) {
+            arena_size = ALIGN(total_required);
+        }
+
+        block_header_t* new_arena = (block_header_t*)os_alloc(arena_size);
+        if (!new_arena) return NULL; // закінчилася пам'ять ОС
+
+        new_arena->size = 0;
+        block_set_size(new_arena, arena_size);
+        new_arena->prev_size = 0;
+#if USE_PAGED_MEMORY
+        new_arena->offset = sizeof(block_header_t);
+#endif
+        block_set_first(new_arena, true);
+        block_set_last(new_arena, true);
+        block_set_busy(new_arena, false);
+
+        // Вставляємо нову арену в дерево як звичайний великий вільний блок
+        block_node* n = block_to_node(new_arena);
+        init_node(n, arena_size);
+        block_tree_insert(&free_tree, n);
+
+        best = block_tree_find_best(&free_tree, total_required);
+    }
 
     block_header_t* block = node_to_block(best);
 
@@ -86,10 +114,28 @@ void mem_free(void* ptr) {
         block = block_merge(prev); // Тепер prev поглинає block, вказівник зсувається ліворуч
     }
 
+    // Якщо блок одночасно є і першим, і останнім - це означає, що арена повністю порожня
+    if (block_is_first(block) && block_is_last(block)) {
+        os_free((void*)block, 0);
+        return;
+    }
+
     // Додаємо підсумковий великий блок у дерево
     block_node* n = block_to_node(block);
     init_node(n, block_size(block));
     block_tree_insert(&free_tree, n);
+
+#if USE_PAGED_MEMORY
+    // Захищаємо структуру дерева від отруєння сторінок
+    size_t payload_size = block_size(block) - sizeof(block_header_t);
+    if (payload_size > sizeof(block_node)) {
+        void* safe_ptr = (uint8_t*)block_to_payload(block) + sizeof(block_node);
+        size_t safe_size = payload_size - sizeof(block_node);
+        size_t safe_offset = block->offset + sizeof(block_node);
+
+        os_discard_pages(safe_ptr, safe_size, safe_offset);
+    }
+#endif
 }
 
 void* mem_realloc(void* ptr, size_t size) {
@@ -107,6 +153,13 @@ void* mem_realloc(void* ptr, size_t size) {
 
     // Сценарій 1: Зменшення блоку (Shrinking) in-place
     if (total_required <= current_size) {
+
+        if (current_size >= DEFAULT_ARENA_SIZE) {
+            if ((double)total_required > (double)current_size * SHRINK_THRESHOLD) {
+                return ptr;
+            }
+        }
+
         if (current_size - total_required >= sizeof(block_header_t) + MIN_PAYLOAD_SIZE) {
             block_split(block, total_required);
 
@@ -115,6 +168,16 @@ void* mem_realloc(void* ptr, size_t size) {
                 block_node* next_node = block_to_node(next);
                 init_node(next_node, block_size(next)); // Ключ - це розмір нового уламка
                 block_tree_insert(&free_tree, next_node);
+#if USE_PAGED_MEMORY
+                size_t next_payload_size = block_size(next) - sizeof(block_header_t);
+                if (next_payload_size > sizeof(block_node)) {
+                    void* safe_ptr = (uint8_t*)block_to_payload(next) + sizeof(block_node);
+                    size_t safe_size = next_payload_size - sizeof(block_node);
+                    size_t safe_offset = next->offset + sizeof(block_node);
+
+                    os_discard_pages(safe_ptr, safe_size, safe_offset);
+                }
+#endif
             }
         }
         return ptr;
